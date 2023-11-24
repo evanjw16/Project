@@ -1,8 +1,8 @@
-import * as THREE from "../three.js/three.js/build/three.module.js"
-import { OrbitControls } from '../three.js/three.js/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from '../three.js/three.js/examples/jsm/loaders/GLTFLoader.js'
-import { FontLoader } from '../three.js/three.js/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from '../three.js/three.js/examples/jsm/geometries/TextGeometry.js';
+import * as THREE from './node_modules/three/build/three.module';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 let scene, cam, renderer, controls
 let width = window.innerWidth
@@ -11,7 +11,7 @@ let cam1, cam2
 let camera
 let Spotlight
 let day, night
-let peaShooterProjectile, speed
+let peaShooterProjectile, speed, peaExist = false
 let Exit = false;
 let loader = new GLTFLoader()
 let floader = new FontLoader()
@@ -51,29 +51,29 @@ const initRenderer = () => {
 const initSky = () => {
     day = new THREE.CubeTextureLoader()
     .load([
-        "../Assets/cloudy/bluecloud_ft.jpg",
-        "../Assets/cloudy/bluecloud_bk.jpg",
-        "../Assets/cloudy/bluecloud_up.jpg",
-        "../Assets/cloudy/bluecloud_dn.jpg",
-        "../Assets/cloudy/bluecloud_rt.jpg",
-        "../Assets/cloudy/bluecloud_lf.jpg"
+        "./Assets/cloudy/bluecloud_ft.jpg",
+        "./Assets/cloudy/bluecloud_bk.jpg",
+        "./Assets/cloudy/bluecloud_up.jpg",
+        "./Assets/cloudy/bluecloud_dn.jpg",
+        "./Assets/cloudy/bluecloud_rt.jpg",
+        "./Assets/cloudy/bluecloud_lf.jpg"
     ])
 
     night = new THREE.CubeTextureLoader()
     .load([
-        "../Assets/nightskycolor.png",
-        "../Assets/nightskycolor.png",
-        "../Assets/nightskycolor.png",
-        "../Assets/nightskycolor.png",
-        "../Assets/nightskycolor.png",
-        "../Assets/nightskycolor.png"
+        "./Assets/nightskycolor.png",
+        "./Assets/nightskycolor.png",
+        "./Assets/nightskycolor.png",
+        "./Assets/nightskycolor.png",
+        "./Assets/nightskycolor.png",
+        "./Assets/nightskycolor.png"
     ])
 
     scene.background = day
 }
 
 const createZombie = () => {
-    loader.load("../Assets/zombie/scene.gltf", function(GLTF) {
+    loader.load("./Assets/zombie/scene.gltf", function(GLTF) {
         let zombie = GLTF.scene
         zombie.traverse(function(child) {
             if (child.isMesh) {
@@ -92,7 +92,7 @@ const createZombie = () => {
 }
 
 const createFence = () => {
-    loader.load("../Assets/fence/scene.gltf", function(GLTF){
+    loader.load("./Assets/fence/scene.gltf", function(GLTF){
         let fence = GLTF.scene
         fence.traverse(function(child){
             if (child.isMesh) {
@@ -107,7 +107,7 @@ const createFence = () => {
         scene.add(fence)
     })
 
-    loader.load("../Assets/fence/scene.gltf", function(GLTF){
+    loader.load("./Assets/fence/scene.gltf", function(GLTF){
         let fence = GLTF.scene
         fence.traverse(function(child){
             if (child.isMesh) {
@@ -122,7 +122,7 @@ const createFence = () => {
         scene.add(fence)
     })
 
-    loader.load("../Assets/fence/scene.gltf", function(GLTF){
+    loader.load("./Assets/fence/scene.gltf", function(GLTF){
         let fence = GLTF.scene
         fence.traverse(function(child){
             if (child.isMesh) {
@@ -137,7 +137,7 @@ const createFence = () => {
         scene.add(fence)
     })
 
-    loader.load("../Assets/fence/scene.gltf", function(GLTF){
+    loader.load("./Assets/fence/scene.gltf", function(GLTF){
         let fence = GLTF.scene
         fence.traverse(function(child){
             if (child.isMesh) {
@@ -152,7 +152,7 @@ const createFence = () => {
         scene.add(fence)
     })
 
-    loader.load("../Assets/fence/scene.gltf", function(GLTF){
+    loader.load("./Assets/fence/scene.gltf", function(GLTF){
         let fence = GLTF.scene
         fence.traverse(function(child){
             if (child.isMesh) {
@@ -169,7 +169,7 @@ const createFence = () => {
 }
 
 const createText = () => {
-    floader.load("../three.js/three.js/examples/fonts/gentilis_bold.typeface.json", (Font) => {
+    floader.load("./node_modules/three/examples/fonts/gentilis_bold.typeface.json", (Font) => {
         let geo = new TextGeometry("Plant NO Zombie", {
             size: 10,
             height: 2,
@@ -192,7 +192,7 @@ const render = () => {
 const createPlane = () => {
     let geo = new THREE.PlaneGeometry(100, 75)
     let loader = new THREE.TextureLoader()
-    let texture = loader.load("../Assets/grass.png")
+    let texture = loader.load("./Assets/grass.png")
     let mat = new THREE.MeshStandardMaterial({
         map: texture,
         side: THREE.DoubleSide
@@ -264,7 +264,7 @@ const createTop = () => {
 const createWall = () => {
     let geo = new THREE.CylinderGeometry(4.5, 4.5, 3, 64, 64)
     let loader = new THREE.TextureLoader()
-    let texture = loader.load("../Assets/wallnut.jpeg")
+    let texture = loader.load("./Assets/wallnut.jpeg")
     let mat = new THREE.MeshPhongMaterial({map: texture})
     let mesh = new THREE.Mesh(geo, mat)
     mesh.rotateZ(Math.PI/2)
@@ -286,6 +286,7 @@ const createSpotlight = () => {
     scene.add(Spotlight)
 }
 
+
 const createProjectile = () => {
     let geo = new THREE.SphereGeometry(1, 64)
     let mat = new THREE.MeshPhongMaterial({color: 0x52D017})
@@ -293,13 +294,14 @@ const createProjectile = () => {
     peaShooterProjectile.position.set(-27, 10, 0)
     scene.add(peaShooterProjectile)
     speed = 0.5
+    peaExist = true
 }
 
 const updateProjectile = () => {
     if (peaShooterProjectile) {
         peaShooterProjectile.translateX(speed);
 
-        let raycast = new THREE.Raycaster(peaShooterProjectile.position, new THREE.Vector3(1, 0, 0));
+        let raycast = new THREE.Raycaster(peaShooterProjectile.position, new THREE.Vector3(5, 0, 0));
 
         let zombie = scene.getObjectByName("zombie");
 
@@ -325,6 +327,7 @@ const reset = () => {
     scene.remove(peaShooterProjectile)
     peaShooterProjectile = null
     Exit = false
+    peaExist = false
 }
 
 document.addEventListener("keydown", (event) => {
@@ -352,6 +355,7 @@ document.addEventListener("keydown", (event) => {
 })
 
 document.addEventListener("mousedown", (event) => {
+    console.log("Mouse clicked:", event);
     let raycast = new THREE.Raycaster()
     let mouse = new THREE.Vector2()
 
@@ -372,6 +376,10 @@ document.addEventListener("mousedown", (event) => {
         console.log("click!")
         reset()
     }
+
+    console.log('Mouse Position:', mouse.x, mouse.y);
+    console.log('Intersect "Head":', intersect);
+    console.log('Intersect "zombie":', intersectZombie);
 })
 
 window.onload = () => {
